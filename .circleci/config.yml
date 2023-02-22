@@ -41,28 +41,15 @@ commands:
             fi
 
 jobs:
-  notify:
+  slack-notification:
     docker:
-      - image: "cimg/base:stable"
-    steps:  
+      - image: cimg/base:stable
+    steps:
       - slack/notify:
-          channel: "circleci-pipelinefaliure"
+          channel: circleci-pipelinefaliure
           event: always
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*Pipeline faliure*",
-                      "emoji": true
-                    }
-                  ]
-                }
-              ]
-            }
+          ignore_errors: true
+
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -336,8 +323,7 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - notify:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - slack-notification
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
