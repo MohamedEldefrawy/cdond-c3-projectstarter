@@ -59,8 +59,8 @@ jobs:
           key: frontend-build
       - slack/notify:
           channel: circleci-pipelinefaliure
-          event: always
-          ignore_errors: false
+          event: fail
+          ignore_errors: true
 
   build-backend:
     docker:
@@ -81,8 +81,8 @@ jobs:
 
       - slack/notify:
           channel: circleci-pipelinefaliure
-          event: always
-          ignore_errors: false
+          event: fail
+          ignore_errors: true
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -96,6 +96,10 @@ jobs:
             cd frontend
             npm install
             npm run test
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: fail
+          ignore_errors: true
   test-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -109,7 +113,10 @@ jobs:
             cd backend
             npm install
             npm run test
-
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: fail
+          ignore_errors: true
   scan-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -125,7 +132,10 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: fail
+          ignore_errors: true
   scan-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -141,7 +151,10 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: fail
+          ignore_errors: true
   deploy-infrastructure:
     docker:
       - image: circleci/node:13.8.0
