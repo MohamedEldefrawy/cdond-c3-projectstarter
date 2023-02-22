@@ -4,7 +4,10 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      # Add parameter here   
+      Workflow_ID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
+      # Add parameter here
     steps:
       - run:
           name: Destroy environments
@@ -16,7 +19,9 @@ commands:
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      # Add parameter here     
+      Workflow_ID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
@@ -31,7 +36,7 @@ commands:
             #  Add revert code here. You can find this in the Getting Started section.
               exit 1
             fi
-            
+
 jobs:
   build-frontend:
     docker:
@@ -45,7 +50,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm run build 
+            npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -62,48 +67,53 @@ jobs:
           command: |
             cd backend
             npm install
-            npm run build 
+            npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
 
   test-frontend:
     docker:
-      # Docker image here
+      - image: circleci/node:13.8.0
+        # Docker image here
     steps:
-      # Checkout code from git
+      - checkout
       # Restore from cache
       # Your job code here
-                
+
   test-backend:
     docker:
-      # Docker image here
+      - image: circleci/node:13.8.0
+        # Docker image here
     steps:
-      # Checkout code from git
+      - checkout
       # Restore from cache
       # Your job code here
-            
+
   scan-frontend:
     docker:
-      # Docker image here
+      - image: circleci/node:13.8.0
+        # Docker image here
     steps:
-      # Checkout code from git
+      - checkout
       # Restore from cache
       # Your job code here
 
   scan-backend:
     docker:
-      # Docker image here
+      - image: circleci/node:13.8.0
+        # Docker image here
     steps:
-      # Checkout code from git
+      - checkout
       # Restore from cache
       # Your job code here
 
   deploy-infrastructure:
     docker:
-      # Docker image here that supports AWS CLI
+      - image: circleci/node:13.8.0
+    # Docker image here that supports AWS CLI
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -131,13 +141,14 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
 
   configure-infrastructure:
     docker:
+      - image: python:3.7-alpine3.11
       # Docker image here that supports Ansible
     steps:
-      # Checkout code from git
+      - checkout
       # Add ssh keys with fingerprint
       # attach workspace
       - run:
@@ -150,13 +161,13 @@ jobs:
           command: |
             # Your code here
             exit 1
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
 
   run-migrations:
     docker:
-      # Docker image here that supports NodeJS
+      - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Run migrations
           command: |
@@ -167,13 +178,13 @@ jobs:
           command: |
             # Your code here
             exit 1
-     # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
 
   deploy-frontend:
     docker:
-      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -188,13 +199,13 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure      
-                    
+      # Here's where you will add some code to rollback on failure
+
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
     steps:
-      # Checkout code from git
+      - checkout
       # Add ssh keys with fingerprint
       # attach workspace
       - run:
@@ -205,13 +216,13 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
 
   smoke-test:
     docker:
-      # Lightweight Docker image 
+      - image: alpine:latest
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -228,13 +239,13 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
 
   cloudfront-update:
     docker:
-      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -243,27 +254,26 @@ jobs:
           name: Update cloudfront distribution
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
 
 cleanup:
-    docker:
-      # Docker image here
-    steps:
-      # Checkout code from git
-      - run:
-          name: Get old stack workflow id
-          command: |
+  docker:
+    - image: alpine:latest
+  steps:
+    - checkout
+    - run:
+        name: Get old stack workflow id
+        command: |
+          # your code here
+          export OldWorkflowID="the id here"
+          export STACKS=[] #put the list of stacks here
+    - run:
+        name: Remove old stacks and files
+        command: |
+          if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+          then
             # your code here
-            export OldWorkflowID="the id here"
-            export STACKS=[] #put the list of stacks here
-      - run:
-          name: Remove old stacks and files
-          command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-            then
-              # your code here
-            fi
-            
+          fi
 
 workflows:
   default:
