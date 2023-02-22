@@ -46,7 +46,7 @@ jobs:
       - image: "cimg/base:stable"
     steps:
       - slack/notify:
-          channel: "CircleCi-Udapeople-pipelineFaliure"
+          channel: "circleci-pipelinefaliure"
           event: always
           custom: |
             {
