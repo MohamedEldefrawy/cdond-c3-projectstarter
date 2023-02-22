@@ -102,20 +102,30 @@ jobs:
   scan-frontend:
     docker:
       - image: circleci/node:13.8.0
-        # Docker image here
     steps:
       - checkout
-      # Restore from cache
-      # Your job code here
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: check frontend security vulnerabilities
+          command: |
+            cd frontend
+            npm install
+            npm audit --audit-level=critical
 
   scan-backend:
     docker:
       - image: circleci/node:13.8.0
-        # Docker image here
     steps:
       - checkout
-      # Restore from cache
-      # Your job code here
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: check backend security vulnerabilities
+          command: |
+            cd backend
+            npm install
+            npm audit --audit-level=critical
 
   deploy-infrastructure:
     docker:
