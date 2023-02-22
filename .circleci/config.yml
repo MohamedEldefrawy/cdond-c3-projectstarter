@@ -60,7 +60,7 @@ jobs:
       - slack/notify:
           channel: circleci-pipelinefaliure
           event: always
-          ignore_errors: true
+          ignore_errors: false
 
   build-backend:
     docker:
@@ -82,7 +82,7 @@ jobs:
       - slack/notify:
           channel: circleci-pipelinefaliure
           event: always
-          ignore_errors: true
+          ignore_errors: false
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
