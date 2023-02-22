@@ -41,15 +41,6 @@ commands:
             fi
 
 jobs:
-  slack-notification:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - slack/notify:
-          channel: circleci-pipelinefaliure
-          event: always
-          ignore_errors: true
-
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -66,6 +57,10 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: always
+          ignore_errors: true
 
   build-backend:
     docker:
@@ -84,6 +79,10 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: always
+          ignore_errors: true
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -323,7 +322,6 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - slack-notification
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
