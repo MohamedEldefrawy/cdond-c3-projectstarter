@@ -44,10 +44,11 @@ jobs:
   notify:
     docker:
       - image: "cimg/base:stable"
-    steps:
+    steps:  
       - slack/notify:
           channel: "circleci-pipelinefaliure"
           event: always
+          when: on_fail
           custom: |
             {
               "blocks": [
