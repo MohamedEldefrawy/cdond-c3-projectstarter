@@ -11,13 +11,13 @@ commands:
           name: Install Ansible
           command: apk add ansible
 
-  install_node:
-    description: Installiong NodeJs v 13.8
+  install_python3:
+    description: Installiong Python3
     steps:
       - run:
-          name: Install Node
+          name: Install Python3
           command: |
-            apk add nodejs=13.8.0
+            apk add python3
 
   install_awscli:
     description: Installing AWS cli commands
@@ -269,12 +269,12 @@ jobs:
       - destroy-environment
   deploy-frontend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - install_ansible
       - install_awscli
-      - install_node
+      - install_python3
 
       - run:
           name: Get backend url
