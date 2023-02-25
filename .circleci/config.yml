@@ -19,7 +19,7 @@ commands:
           command: |
             apk add tar gzip curl
             curl "https://nodejs.org/dist/v13.8.0/node-v13.8.0-linux-x64.tar.xz" -o "node.zip"
-            unzip node.zip
+            tar -czvf node.zip
             cd node
             mv node-v13.8-linux-x64 /usr/local
             ln -s /usr/local/node-v13.8-linux-x64/bin/node /usr/local/bin/node
