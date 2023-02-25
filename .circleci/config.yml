@@ -163,6 +163,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install tar module
+          command: |
+            sudo apt upgrade -y
+            sudo apt update -y
+            sudo apt onstall -y tar gzip
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
