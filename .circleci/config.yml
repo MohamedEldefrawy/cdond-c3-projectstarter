@@ -165,9 +165,9 @@ jobs:
       - run:
           name: Install tar module
           command: |
-            sudo yum upgrade -y
-            sudo yum update -y
-            sudo yum onstall -y tar gzip
+             yum upgrade -y
+             yum update -y
+             yum onstall -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
