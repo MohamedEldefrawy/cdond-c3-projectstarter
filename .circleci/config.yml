@@ -157,7 +157,6 @@ jobs:
           channel: circleci-pipelinefaliure
           event: fail
           ignore_errors: true
-  
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -185,6 +184,12 @@ jobs:
             aws ec2 describe-instances \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
               >> .circleci/ansible/inventory.txt
+
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: fail
+          ignore_errors: true
+
       - persist_to_workspace:
           root: ~/
           paths:
