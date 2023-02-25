@@ -214,7 +214,9 @@ jobs:
           command: |
             apk add ansible
             apk add tar gzip 
-            apk add awscli
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Configure server
           command: |
