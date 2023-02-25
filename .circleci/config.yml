@@ -17,12 +17,7 @@ commands:
       - run:
           name: Install Node
           command: |
-            # apk add tar gzip curl
-            # wget "https://nodejs.org/dist/v13.8.0/node-v13.8.0-linux-x64.tar.gz"
-            # tar -xzf node-v13.8.0-linux-x64.tar.gz
-            # mv node-v13.8.0-linux-x64 /usr/local
-            # ln -s /usr/local/node-v13.8.0-linux-x64/bin/node /usr/local/bin/node
-            apk add nodejs=13.8.0-r0
+            apk add nodejs=13.8.0
 
   install_awscli:
     description: Installing AWS cli commands
@@ -272,15 +267,14 @@ jobs:
                 curl --insecure https://kvdb.io/PxxAnHD2hpJrm2XjwZEmAz/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy-environment
-
   deploy-frontend:
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
       - install_ansible
-      - install_node
       - install_awscli
+      - install_node
 
       - run:
           name: Get backend url
