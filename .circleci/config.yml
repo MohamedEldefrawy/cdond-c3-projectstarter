@@ -272,10 +272,24 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install_ansible
-      - install_awscli
-      - install_python3
 
+      - run:
+          name: Install aws/cli
+          command: |
+            yum isntall -y tar gzip curl
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+
+      - run:
+          name: install Python3
+          command: |
+            yum install -y python3
+
+      - run:
+          name: install Ansible
+          command: |
+            yum install -y ansible
       - run:
           name: Get backend url
           command: |
