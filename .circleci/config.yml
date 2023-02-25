@@ -165,7 +165,7 @@ jobs:
       - run:
           name: Install tar module
           command: |
-             yum install -y tar gzip
+            yum install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -203,23 +203,24 @@ jobs:
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
-      # Docker image here that supports Ansible
     steps:
       - checkout
-      # Add ssh keys with fingerprint
-      # attach workspace
+      - add_ssh_keys:
+          fingerprints: ["b6:c5:75:10:41:54:7b:cd:e0:91:05:49:88:13:6f:b4"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
-            # Your code here
-            exit 1
+            apk add ansible
+            apk add tar gzip 
+            apk add awscli
       - run:
           name: Configure server
           command: |
-            # Your code here
-            exit 1
-      # Here's where you will add some code to rollback on failure
-
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
   run-migrations:
     docker:
       - image: circleci/node:13.8.0
