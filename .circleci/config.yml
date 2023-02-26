@@ -91,7 +91,6 @@ jobs:
           channel: circleci-pipelinefaliure
           event: fail
           ignore_errors: true
-
   build-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -316,23 +315,54 @@ jobs:
           ignore_errors: true
 
       - destroy-environment
-
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      # Add ssh keys with fingerprint
-      # attach workspace
+
+      - add_ssh_keys:
+          fingerprints: ["b6:c5:75:10:41:54:7b:cd:e0:91:05:49:88:13:6f:b4"]
+      - attach_workspace:
+          at: ~/
       - run:
-          name: Install dependencies
+          name: Install aws/cli
           command: |
-            # your code here
+            sudo apt install -y tar gzip curl
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            sudo unzip awscliv2.zip
+            sudo ./aws/install
+
+      - run:
+          name: install Python3
+          command: |
+            sudo apt install -y python3
+
+      - run:
+          name: install Ansible
+          command: |
+            sudo apt update
+            sudo apt install -y software-properties-common
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install -y ansible
       - run:
           name: Deploy backend
           command: |
-            # your code here
-      # Here's where you will add some code to rollback on failure
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - slack/notify:
+          channel: circleci-pipelinefaliure
+          event: fail
+          ignore_errors: true
+
+      - destroy-environment
 
   smoke-test:
     docker:
