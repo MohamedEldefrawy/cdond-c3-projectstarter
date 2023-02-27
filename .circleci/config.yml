@@ -228,7 +228,7 @@ jobs:
       - destroy-environment
   configure-infrastructure:
     docker:
-      - image: python:3.10-alpine3.11
+      - image: python:3.12-rc-alpine3.17
     steps:
       - checkout
       - install_ansible
