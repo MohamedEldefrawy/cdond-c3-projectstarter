@@ -1,15 +1,24 @@
 ---
+- name: Create Backend Directory
+  file:
+    path: ~/ubuntu/backend
+    state: directory
+- copy:
+    src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
+    dest: ~/ubuntu/backend
+
 - name: Unarchive backend files
   unarchive:
     src: artifact.tar.gz
-    dest: ~/backend-app
+    dest: ~/ubuntu/backend
 
 - name: Install dependencies
   shell: |
+    cd ~/ubunto/backend
     npm i
 
 - name: "Start pm2 server"
   shell: |
-    cd /dist
+    cd ~/ubunto/backend/dist
     pm2 stop default
-    pm2 start npm --start
+    pm2 start -f main.ts
