@@ -401,12 +401,14 @@ jobs:
              --output text)
              export API_URL=http://${BACKEND_PUBLIC_IP}:3030
              echo $API_URL
-             if curl -s $API_URL/api/status | grep "ok"
-             then
-                 exit 0
-             else
-                 exit 1
-             fi
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+                return 0
+            else
+                return 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
@@ -423,7 +425,7 @@ jobs:
           event: fail
           ignore_errors: true
 
-      - destroy-environment
+      # - destroy-environment
 
   cloudfront-update:
     docker:
