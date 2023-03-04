@@ -13,6 +13,7 @@
     dest: /home/ubuntu/backend
 - name: create .env
   shell: |
+    cd /home/ubuntu/backend
     cp development.env .env
 - name: "Installing Node Dependencies"
   shell: |
