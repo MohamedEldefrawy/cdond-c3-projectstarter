@@ -4,8 +4,8 @@
     state: directory
 - name: listFiles
   shell: |
-    pwd
-    ls -a 
+    echo $(pwd)
+    echo $(ls -a) 
 - copy:
     src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
     dest: /home/ubuntu/backend
