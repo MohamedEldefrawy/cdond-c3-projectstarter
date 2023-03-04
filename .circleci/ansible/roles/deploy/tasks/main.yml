@@ -2,7 +2,10 @@
   file:
     path: /home/ubuntu/backend
     state: directory
-
+- pwd:
+  shell: |
+    pwd
+    ll
 - copy:
     src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
     dest: /home/ubuntu/backend
@@ -11,11 +14,10 @@
   unarchive:
     src: artifact.tar.gz
     dest: /home/ubuntu/backend
-- name: "Installing Node Dependencies"
-  shell: |
-    cd /home/ubuntu/backend
-    npm i
+
 - name: Start the app
   shell: |
+    cd /home/ubuntu/backend
+    npm install
     pm2 stop default
-    pm2 start -f /home/ubuntu/backend/dist/main.js
+    pm2 start npm -- start
