@@ -23,8 +23,8 @@
     npm i
 - name: Start the app
   shell: |
+    cd /home/ubuntu/backend
     pm2 stop default
-    pm2 delete main
+    pm2 delete all
     pm2 start npm -- start
-    pm2 start -f /home/ubuntu/backend/dist/main.js
-    pm2 stop main
+    pm2 start -f dist/main.js
