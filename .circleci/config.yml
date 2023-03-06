@@ -316,6 +316,7 @@ jobs:
           ignore_errors: true
 
       - destroy-environment
+      - revert-migrations
   deploy-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -363,9 +364,8 @@ jobs:
           channel: circleci-pipelinefaliure
           event: fail
           ignore_errors: true
-
       - destroy-environment
-
+      - revert-migrations
   smoke-test:
     docker:
       - image: cimg/node:13.8.0
@@ -424,10 +424,8 @@ jobs:
           channel: circleci-pipelinefaliure
           event: fail
           ignore_errors: true
-
       - destroy-environment
       - revert-migrations
-
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
