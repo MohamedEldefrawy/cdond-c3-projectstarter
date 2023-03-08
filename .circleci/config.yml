@@ -59,7 +59,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
+            SUCCESS=$(curl --insecure  https://kvdb.io/PxxAnHD2hpJrm2XjwZEmAz/migration_<< parameters.Workflow_ID >>)
             if(( $SUCCESS==1 )); 
             then
             #  cd ~/project/backend
@@ -255,6 +255,8 @@ jobs:
           command: |
             cd backend
             npm install
+            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            npm run premigrations
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to memstash
@@ -437,7 +439,7 @@ jobs:
                       list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                       --no-paginate --output text)
             echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
-            curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+            curl -k https://kvdb.io/PxxAnHD2hpJrm2XjwZEmAz/old_workflow_id -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update cloudfront distribution
           command: |
