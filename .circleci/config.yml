@@ -263,8 +263,6 @@ jobs:
           command: |
             cd backend
             npm install
-            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            npm run premigrations
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to memstash
