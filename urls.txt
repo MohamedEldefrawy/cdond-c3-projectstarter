@@ -1,2 +1,8 @@
-[Github repo]
+[URL01]
 https://github.com/MohamedEldefrawy/cdond-c3-projectstarter
+[URL02]
+http://udapeople-ee09aa3.s3-website-us-east-1.amazonaws.com/
+[URL03]
+https://d3tdqktbdxuaum.cloudfront.net/#/employees
+[URL04]
+http://34.229.75.182:3030/api/status
