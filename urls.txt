@@ -1,8 +1,10 @@
 [URL01]
 https://github.com/MohamedEldefrawy/cdond-c3-projectstarter
 [URL02]
-http://udapeople-d7bc037.s3-website-us-east-1.amazonaws.com/#/employees
+http://udapeople-a151c03.s3-website-us-east-1.amazonaws.com/#/employees
 [URL03]
 https://d1hrzh0e7tyyhn.cloudfront.net/#/employees
 [URL04]
-http://52.0.126.252:3030/api/status
+http://3.235.46.239:3030/api/status
+[URL05]
+http://ec2-34-204-95-152.compute-1.amazonaws.com:9090/targets#job-udapeople
